@@ -1,6 +1,6 @@
 <template>
-  <div class='com-container' ref = 'seller_ref'>
-    <div class='com-chart'></div>
+  <div class='com-container'>
+    <div class='com-chart'  ref = 'seller_ref'></div>
   </div>
 </template>
 
@@ -19,14 +19,79 @@ export default{
    
     this.initChart()
     this.getDate()
+    //监听页面窗口
+    window.addEventListener('resize',this.screenAdapter)
+    //界面加载完主动进行屏幕适配
+    this.screenAdapter()
   },
   destoryed() {
     clearInterval(this.timer)
+    //页面销毁取消掉监听器
+    window.removeEventListener('reaize',this.screenAdapter)
   },
   methods:{
       //初始化echartInstanec对象
       initChart() {
         this.chartInstance = this.$echarts.init(this.$refs.seller_ref,'chalk')
+        const initOption = {
+          title:{
+             text:'▎商家销售统计',
+             textStyle:{
+                 fontSize:66
+             },
+             top:20,
+             left:20
+           },
+           grid:{
+             top:'20%',
+             left:'3%',
+             right:'6%',
+             bottom:'3%',
+             containLabel:true //距离是包含坐标轴上的文字
+           },
+           xAxis:{
+             type:'value'
+           },
+           yAxis:{
+             type:'category',
+           },
+           tooltip:{
+             trigger:'axis',
+             axisPointer:{
+                 type:'line',
+                 z:0,
+                 lineStyle:{
+                     width:66,
+                     color:'#2D3443'
+                 }
+             }
+           },
+           series:[{
+               type:'bar',
+               barWidth:66,
+               label:{
+                   show:true,
+                   position:'right',
+                   textStyle:{
+                       color:'white'
+                   }
+               },
+               itemStyle:{
+                   barBorderRadius:[0,33,33,0],                 //x1,y1,x2,y2
+                   color:new this.$echarts.graphic.LinearGradient(0,0,1,0,[
+                       {
+                           offset:0,
+                           color:'#5052EE'
+                       },
+                       {
+                           offset:1,
+                           color:'#AB6EE5'
+                       }
+                   ])
+               }
+           }]
+        }
+        this.chartInstance.setOption(initOption)
         this.chartInstance.on('mouseover',() => {
             clearInterval(this.timer)
         })
@@ -59,67 +124,16 @@ export default{
         const sellerValues = showData.map(item=>{
             return item.value
         })
-        const option = {
-           title:{
-             text:'▎商家销售统计',
-             textStyle:{
-                 fontSize:66
-             },
-             top:20,
-             left:20
-           },
-           grid:{
-             top:'20%',
-             left:'3%',
-             right:'6%',
-             bottom:'3%',
-             containLabel:true //距离是包含坐标轴上的文字
-           },
-           xAxis:{
-             type:'value'
-           },
+        const dataOption = {
+        
            yAxis:{
-             type:'category',
              data:sellerNames
            },
-           tooltip:{
-             trigger:'axis',
-             axisPointer:{
-                 type:'line',
-                 z:0,
-                 lineStyle:{
-                     width:66,
-                     color:'#2D3443'
-                 }
-             }
-           },
-           series:{
-               type:'bar',
-               data:sellerValues,
-               barWidth:66,
-               label:{
-                   show:true,
-                   position:'right',
-                   textStyle:{
-                       color:'white'
-                   }
-               },
-               itemStyle:{
-                   barBorderRadius:[0,33,33,0],                 //x1,y1,x2,y2
-                   color:new this.$echarts.graphic.LinearGradient(0,0,1,0,[
-                       {
-                           offset:0,
-                           color:'#5052EE'
-                       },
-                       {
-                           offset:1,
-                           color:'#AB6EE5'
-                       }
-                   ])
-               }
-           }
+           series:[
+               {data:sellerValues}
+           ]
         }
-        this.chartInstance.setOption(option)
+        this.chartInstance.setOption(dataOption)
       },
       startInterval() {
           if(this.timer){
@@ -131,13 +145,37 @@ export default{
             this.updateChart()
           },3000)
       },
-     
-    
+      //屏幕适配     
+      screenAdapter() {
+        const titleSize = this.$refs.seller_ref.offsetWidth/100*3.6
+        const adapterOption = {
+          title:{
+             textStyle:{
+                 fontSize:titleSize 
+             },
+           },
+           tooltip:{
+             axisPointer:{
+                 lineStyle:{
+                     width:titleSize ,
+                 }
+             }
+           },
+           series:{
+               barWidth:titleSize ,
+               itemStyle:{
+                   barBorderRadius:[0,titleSize/2,titleSize/2,0],                 
+               }
+           }
+        }
+        this.chartInstance.setOption(adapterOption)
+        //图表大小适配
+        this.chartInstance.resize()
+      }
       
   }
   }
 </script>
 
 <style lang="less">
-
 </style>
