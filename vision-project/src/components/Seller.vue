@@ -18,7 +18,7 @@ export default{
   mounted() {
    
     this.initChart()
-    this.getDate()
+    this.getData()
     //监听页面窗口
     window.addEventListener('resize',this.screenAdapter)
     //界面加载完主动进行屏幕适配
@@ -101,7 +101,7 @@ export default{
       },
 
       //获取数据
-      async getDate() {
+      async getData() {
         'https://127.0.0.1:8081/api/seller'
          let {data:ret} = await this.$axios.get('seller')
          this.allData = ret
