@@ -56,6 +56,10 @@ export default{
       this.initChart()
       this.getData()
       window.addEventListener('resize',this.screenAdapter)
+      this.screenAdapter()
+    },
+    destoryed(){
+      window.removeEventListener('resize',this.screenAdapter)
     },
     methods:{
       initChart() {
@@ -89,7 +93,6 @@ export default{
      async getData() {
          const {data:ret} = await this.$axios.get('trend')
          this.allData = ret
-         console.log(ret)
          this.updateChart()
       },
       updateChart() {
