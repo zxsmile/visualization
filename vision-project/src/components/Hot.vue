@@ -118,7 +118,10 @@ export default{
           this.chartInstance.setOption(dataOption)
       },
       screenAdapter() {
-          this.titleSize = this.$refs.hot_ref.offsetWidth / 100 * 3.6 //eslint-disable-line no-unused-vars
+          if(this.$refs.hot_ref){
+             this.titleSize = this.$refs.hot_ref.offsetWidth / 100 * 3.6 //eslint-disable-line no-unused-vars 
+          }
+          
           const adapterOption = {
               title:{
                   textStyle:{

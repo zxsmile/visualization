@@ -107,7 +107,11 @@ export default{
         this.chartInstance.setOption(dataOption)
       },
       screenAdapter() {
-        const titleFontSize = this.$refs.map_ref.offsetWidth/100*3.6
+          let titleFontSize = 0
+          if(this.$refs.map_ref){
+              titleFontSize = this.$refs.map_ref.offsetWidth/100*3.6
+          }
+        //const titleFontSize = this.$refs.map_ref.offsetWidth/100*3.6
         const adapterOption = {
             title:{
                 textStyle:{

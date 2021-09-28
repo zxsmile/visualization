@@ -147,7 +147,11 @@ export default{
       },
       //屏幕适配     
       screenAdapter() {
-        const titleSize = this.$refs.seller_ref.offsetWidth/100*3.6
+        let titleSize = 0
+        if(this.$refs.seller_ref){
+          titleSize = this.$refs.seller_ref.offsetWidth/100*3.6
+        }
+        //const titleSize = this.$refs.seller_ref.offsetWidth/100*3.6
         const adapterOption = {
           title:{
              textStyle:{

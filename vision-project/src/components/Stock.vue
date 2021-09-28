@@ -19,7 +19,7 @@ export default{
       this.getData()
       window.addEventListener('resize',this.screenAdapter)
       this.screenAdapter()
-
+      console.log('mounted')
     },
     destoryed() {
       window.removeEventListener('resize',this.screenAdapter)
@@ -113,7 +113,11 @@ export default{
           this.chartInstance.setOption(dataOption)
       },
       screenAdapter() {
-          const titleSize = this.$refs.stock_ref.offsetWidth / 100 * 3.6 //eslint-disable-line no-unused-vars
+          let titleSize = 0 
+          if(this.$refs.stock_ref){
+              titleSize = this.$refs.stock_ref.offsetWidth / 100 * 3.6  
+          }
+          //const titleSize = this.$refs.stock_ref.offsetWidth / 100 * 3.6 //eslint-disable-line no-unused-vars
           const innerRadius = titleSize*2
           const outerRadius = innerRadius*1.125 //eslint-disable-line no-unused-vars
           const adapterOption = {

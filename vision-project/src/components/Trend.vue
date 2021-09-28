@@ -151,7 +151,10 @@ export default{
           this.chartInstance.setOption(dataOption)
       },
       screenAdapter() {
-        this.titleSize = this.$refs.trend_ref.offsetWidth/100*3.6
+        if(this.$refs.trend_ref){
+            this.titleSize = this.$refs.trend_ref.offsetWidth/100*3.6
+        }
+        
         const adapterOption={
             legend:{
                 itemWidth:this.titleSize,
