@@ -16,18 +16,27 @@ export default{
     }
   },
   mounted() {
-   
     this.initChart()
-    this.getData()
+    //this.getData()
+    this.$socket.send({
+      action:'getData',
+      socketType:'rankData',
+      chartName:'rank',
+      value:''
+    })
     //监听页面窗口
     window.addEventListener('resize',this.screenAdapter)
     //界面加载完主动进行屏幕适配
     this.screenAdapter()
+ },
+ created() {
+    this.$socket.registerCallBack('rankData',this.getData)
   },
   destoryed() {
     //页面销毁取消掉监听器
     window.removeEventListener('reaize',this.screenAdapter)
     clearInterval(this.timer)
+    this.$socket.unRegisterCallBack('rankData') 
   },
   methods:{
       //初始化echartInstanec对象
@@ -71,8 +80,8 @@ export default{
       },
 
       //获取数据
-      async getData() {
-         let {data:ret} = await this.$axios.get('rank')
+      async getData(ret) {
+         //let {data:ret} = await this.$axios.get('rank')
          this.allData = ret
          this.allData.sort((a,b) => {
             return b.value-a.value

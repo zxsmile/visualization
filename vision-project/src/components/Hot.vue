@@ -33,12 +33,22 @@ export default{
     },
     mounted() {
       this.initChart()
-      this.getData()
+      //this.getData()
+      this.$socket.send({
+        action:'getData',
+        socketType:'hotData',
+        chartName:'hot',
+        value:''
+      })
       window.addEventListener('resize',this.screenAdapter)
       this.screenAdapter()
     },
+    created() {
+      this.$socket.registerCallBack('hotData',this.getData)
+    },
     destoryed() {
       window.removeEventListener('resize',this.screenAdapter)
+      this.$socket.unRegisterCallBack('hotData')
     },
     methods:{
       initChart() {
@@ -72,9 +82,9 @@ export default{
           }
           this.chartInstance.setOption(initOption)
       },
-      async getData() {
-         const {data:ret} = await this.$axios.get('hot')
-         console.log(ret)
+      async getData(ret) {
+         //const {data:ret} = await this.$axios.get('hot')
+         //console.log(ret)
          this.allData = ret
          this.updateChart()
       },

@@ -54,12 +54,23 @@ export default{
     },
     mounted() {
       this.initChart()
-      this.getData()
+      //this.getData()
+      //发送数据给服务端
+      this.$socket.send({
+          action:'getData',
+          socketType:'trendData',
+          chartName:'trend',
+          value:''
+      })
       window.addEventListener('resize',this.screenAdapter)
       this.screenAdapter()
     },
+    created(){
+      this.$socket.registerCallBack('trendData',this.getData)
+    },
     destoryed(){
       window.removeEventListener('resize',this.screenAdapter)
+      this.$socket.unRegisterCallBack('trendData')
     },
     methods:{
       initChart() {
@@ -90,8 +101,8 @@ export default{
          }
          this.chartInstance.setOption(initOption)
       },
-     async getData() {
-         const {data:ret} = await this.$axios.get('trend')
+     async getData(ret) {
+         //const {data:ret} = await this.$axios.get('trend')
          this.allData = ret
          this.updateChart()
       },

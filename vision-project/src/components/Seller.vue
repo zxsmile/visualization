@@ -18,16 +18,26 @@ export default{
   mounted() {
    
     this.initChart()
-    this.getData()
+    //this.getData()
+    this.$socket.send({
+      action:'getData',
+      socketType:'sellerData',
+      chartName:'seller',
+      value:''
+    })
     //监听页面窗口
     window.addEventListener('resize',this.screenAdapter)
     //界面加载完主动进行屏幕适配
     this.screenAdapter()
   },
+  created() {
+    this.$socket.registerCallBack('sellerData',this.getData)
+  },
   destoryed() {
     clearInterval(this.timer)
     //页面销毁取消掉监听器
     window.removeEventListener('reaize',this.screenAdapter)
+    this.$socket.unRegisterCallBack('sellerData') 
   },
   methods:{
       //初始化echartInstanec对象
@@ -101,9 +111,9 @@ export default{
       },
 
       //获取数据
-      async getData() {
+      async getData(ret) {
         'https://127.0.0.1:8081/api/seller'
-         let {data:ret} = await this.$axios.get('seller')
+         //let {data:ret} = await this.$axios.get('seller')
          this.allData = ret
          this.allData.sort((a,b) => {
              return a.value-b.value

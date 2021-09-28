@@ -18,12 +18,22 @@ export default{
     },
     mounted() {
       this.initChart(),
-      this.getData()
+      //this.getData()
+      this.$socket.send({
+        action:'getData',
+        socketType:'mapData',
+        chartName:'map',
+        value:''
+      })
       window.addEventListener('resize',this.screenAdapter)
       this.screenAdapter()
     },
+    created() {
+      this.$socket.registerCallBack('mapData',this.getData)
+    },
     detoryed() {
       window.removeEventListener('resize',this.screenAdapter)
+      this.$socket.unRegisterCallBack('mapData')
     },
     methods:{
       async initChart() {
@@ -75,9 +85,9 @@ export default{
             this.chartInstance.setOption(changeOption)
         })
       },
-      async getData() {
+      async getData(ret) {
         // 获取散点数据
-         const {data:ret} = await this.$axios.get('map')
+         //const {data:ret} = await this.$axios.get('map')
          this.allData = ret
          this.updateChart()
       },

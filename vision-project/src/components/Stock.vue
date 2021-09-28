@@ -16,14 +16,23 @@ export default{
     },
     mounted() {
       this.initChart()
-      this.getData()
+      //this.getData()
+      this.$socket.send({
+          action:'getData',
+          socketType:'stockData',
+          chartName:'stock',
+          value:''
+      })
       window.addEventListener('resize',this.screenAdapter)
       this.screenAdapter()
-      console.log('mounted')
+    },
+    created() {
+      this.$socket.registerCallBack('stockData',this.getData)
     },
     destoryed() {
       window.removeEventListener('resize',this.screenAdapter)
       clearInterval(this.timer)
+      this.$socket.unRegisterCallBack('stockData') 
     },
     methods:{
       initChart() {
@@ -43,9 +52,9 @@ export default{
               this.startInterval()
           })
       },
-      async getData() {
-         const {data:ret} = await this.$axios.get('stock')
-         console.log(ret)
+      async getData(ret) {
+         //const {data:ret} = await this.$axios.get('stock')
+         //console.log(ret)
          this.allData = ret
          this.updateChart()
          this.startInterval()
