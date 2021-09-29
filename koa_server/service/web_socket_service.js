@@ -27,7 +27,7 @@ module.exports.listen = () => {
                 //原封不动的将所接收到的数据发送给每一个处于连接状态的客户端
                 //wss.clients 所以连接的客户端，是一个数组
                 wss.clients.forEach(client => {
-                    client.send(msg)
+                    client.send(JSON.stringify(payload))
                 })
             }
         })

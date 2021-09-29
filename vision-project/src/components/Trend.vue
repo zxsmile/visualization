@@ -12,7 +12,8 @@
 </template>
 
 <script>
-
+import {mapState} from 'vuex'
+import {getThemeValue} from '@/utils/theme_utils.js'
 export default{
     data() {
       return{
@@ -23,7 +24,16 @@ export default{
           titleSize:0
       }
     },
+    watch:{
+        theme() {
+            this.chartInstance.dispose()
+            this.initChart()
+            this.screenAdapter()
+            this.updateChart()
+        }
+    },
     computed:{
+      ...mapState(['theme']),
       selectTypes() {
           if(!this.allData){
               return []
@@ -43,7 +53,8 @@ export default{
       //计算标题样式大小（随屏幕变化）
       comStyle() {
           return {
-              fontSize:this.titleSize+'px'
+              fontSize:this.titleSize+'px',
+              color:getThemeValue(this.theme).titleColor,
               }
       },
       marginStyle() {
@@ -74,7 +85,7 @@ export default{
     },
     methods:{
       initChart() {
-         this.chartInstance = this.$echarts.init(this.$refs.trend_ref,'chalk')
+         this.chartInstance = this.$echarts.init(this.$refs.trend_ref,this.theme)
          const initOption = {
              grid:{
                 left:'3%',

@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 export default{
   data() {
     return{
@@ -13,6 +14,17 @@ export default{
       startValue:0,
       endValue:9,
       timer:null
+    }
+  },
+  computed:{
+    ...mapState(['theme'])
+  },
+  watch:{
+    theme() {
+        this.chartInstance.dispose()
+        this.initChart()
+        this.screenAdapter()
+        this.updateChart()
     }
   },
   mounted() {
@@ -41,15 +53,15 @@ export default{
   methods:{
       //初始化echartInstanec对象
       initChart() {
-        this.chartInstance = this.$echarts.init(this.$refs.rank_ref,'chalk')
+        this.chartInstance = this.$echarts.init(this.$refs.rank_ref,this.theme)
         const initOption = {
             title:{
                 text:'▎地区销售统计',
-                top:20,
+                top:10,
                 left:20
             },
             grid:{
-               top:'40%',
+               top:'25%',
                left:'5%',
                right:'5%',
                bottom:'5%',
@@ -86,7 +98,6 @@ export default{
          this.allData.sort((a,b) => {
             return b.value-a.value
         })
-         console.log(ret)
          this.updateChart()
          this.startInterval()
       },

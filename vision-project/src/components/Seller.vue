@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 export default{
   data() {
     return{
@@ -13,6 +14,18 @@ export default{
       totalPage:0,
       currentPage:1,
       timer:null
+    }
+  },
+  computed:{
+    ...mapState(['theme'])
+  },
+  watch:{
+    theme() {
+      console.log('主题切换')
+      this.chartInstance.dispose()//销毁当前的图表
+      this.initChart() //重新以最新的图表主题初始化图表对象
+      this.screenAdapter() //完成屏幕适配
+      this.updateChart() //更新图表的展示
     }
   },
   mounted() {
@@ -42,14 +55,14 @@ export default{
   methods:{
       //初始化echartInstanec对象
       initChart() {
-        this.chartInstance = this.$echarts.init(this.$refs.seller_ref,'chalk')
+        this.chartInstance = this.$echarts.init(this.$refs.seller_ref,this.theme)
         const initOption = {
           title:{
              text:'▎商家销售统计',
              textStyle:{
                  fontSize:66
              },
-             top:20,
+             top:10,
              left:20
            },
            grid:{
@@ -176,10 +189,11 @@ export default{
              }
            },
            series:{
-               barWidth:titleSize ,
+               barWidth:titleSize,
                itemStyle:{
                    barBorderRadius:[0,titleSize/2,titleSize/2,0],                 
-               }
+               },
+               barGap: titleSize*2
            }
         }
         this.chartInstance.setOption(adapterOption)

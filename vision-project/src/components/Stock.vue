@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 export default{
     data() {
       return{
@@ -13,6 +14,17 @@ export default{
           currentPage:0,
           timer:null
       }
+    },
+   computed:{
+        ...mapState(['theme'])
+    },
+    watch:{
+        theme() {
+            this.chartInstance.dispose()
+            this.initChart()
+            this.screenAdapter()
+            this.updateChart()
+        }
     },
     mounted() {
       this.initChart()
@@ -36,7 +48,7 @@ export default{
     },
     methods:{
       initChart() {
-          this.chartInstance = this.$echarts.init(this.$refs.stock_ref,'chalk')
+          this.chartInstance = this.$echarts.init(this.$refs.stock_ref,this.theme)
           const initOption={
               title:{
                   text:'▎库存和销量分析',
@@ -80,7 +92,7 @@ export default{
           const seriesArr = showData.map((item,index) => {
               return {
                   type:'pie',
-                  radius:[110,100],
+                  //radius:[110,100],
                   center:centerArr[index],
                   hoverAnimation:false,//关闭鼠标移入时的动画
                   labelLine:{
@@ -92,7 +104,7 @@ export default{
                   },
                   data:[
                       {   
-                          name:item.name + '\n' + item.sales,
+                          name:item.name + '\n\n' + item.sales,
                           value:item.sales,
                           itemStyle:{
                               color:new this.$echarts.graphic.LinearGradient(0,1,0,0,[
@@ -127,7 +139,7 @@ export default{
               titleSize = this.$refs.stock_ref.offsetWidth / 100 * 3.6  
           }
           //const titleSize = this.$refs.stock_ref.offsetWidth / 100 * 3.6 //eslint-disable-line no-unused-vars
-          const innerRadius = titleSize*2
+          const innerRadius = titleSize*2.8
           const outerRadius = innerRadius*1.125 //eslint-disable-line no-unused-vars
           const adapterOption = {
               title:{
@@ -138,37 +150,37 @@ export default{
               series:[
                   {
                       type:'pie',
-                      redius:[outerRadius,innerRadius],
+                      radius:[outerRadius,innerRadius],
                       label:{
-                          fontSize:titleSize/2
+                          fontSize:titleSize/1.5
                       }
                   },
                   {
                       type:'pie',
-                      redius:[outerRadius,innerRadius],
+                      radius:[outerRadius,innerRadius],
                       label:{
-                          fontSize:titleSize/2
+                          fontSize:titleSize/1.5
                       }
                   },
                   {
                       type:'pie',
-                      redius:[outerRadius,innerRadius],
+                      radius:[outerRadius,innerRadius],
                       label:{
-                          fontSize:titleSize/2
+                          fontSize:titleSize/1.5
                       }
                   },
                   {
                       type:'pie',
-                      redius:[outerRadius,innerRadius],
+                      radius:[outerRadius,innerRadius],
                       label:{
-                          fontSize:titleSize/2
+                          fontSize:titleSize/1.5
                       }
                   },
                   {
                       type:'pie',
-                      redius:[outerRadius,innerRadius],
+                      radius:[outerRadius,innerRadius],
                       label:{
-                          fontSize:titleSize/2
+                          fontSize:titleSize/1.5
                       }
                   }
               ]

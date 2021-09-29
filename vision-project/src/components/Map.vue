@@ -5,7 +5,7 @@
 </template>
 
 <script>
-
+import {mapState} from 'vuex'
 import axios from 'axios'
 import {getProvinceMapInfo} from '../utils/map_utils.js'
 export default{
@@ -15,6 +15,17 @@ export default{
           allData:null,
           mapData:{}//缓存获取到的省份数据
       }
+    },
+    computed:{
+    ...mapState(['theme'])
+    },
+    watch:{
+        theme() {
+            this.chartInstance.dispose()
+            this.initChart()
+            this.screenAdapter()
+            this.updateChart()
+        }
     },
     mounted() {
       this.initChart(),
@@ -37,7 +48,7 @@ export default{
     },
     methods:{
       async initChart() {
-        this.chartInstance = this.$echarts.init(this.$refs.map_ref,'chalk')
+        this.chartInstance = this.$echarts.init(this.$refs.map_ref,this.theme)
         //获取中国地图适量数据，由于map.json文件没在koa2后台，在本地的public目录中，所以不用配置好的this.$axios,直接引入axios
         let ret = await axios.get('http://localhost:8080/static/map/china.json') //eslint-disable-line no-unused-vars
         //注册地图

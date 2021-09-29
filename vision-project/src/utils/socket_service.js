@@ -57,7 +57,6 @@ connect() {
     //获取从服务器端发送过来的数据
     this.ws.onmessage = msg => {
         console.log('从服务器获取到了数据')
-        //console.log(msg.data)
         const recvData = JSON.parse(msg.data)
         if(this.callBackMapping [recvData.socketType]){
             const action = recvData.action
@@ -65,9 +64,9 @@ connect() {
                 const realData = JSON.parse(recvData.data)
                 this.callBackMapping [recvData.socketType].call(this,realData)
             }else if(action === 'fullScreen'){
-                console.log()
+                this.callBackMapping [recvData.socketType].call(this,recvData)
             }else if(action === 'themeChange'){
-                console.log()
+                this.callBackMapping [recvData.socketType].call(this,recvData)
             }
         }
     }

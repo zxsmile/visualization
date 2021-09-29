@@ -8,6 +8,8 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
+import {getThemeValue} from '@/utils/theme_utils.js'
 export default{
     data() {
       return{
@@ -17,7 +19,16 @@ export default{
           titleSize:0
       }
     },
+    watch:{
+        theme() {
+            this.chartInstance.dispose()
+            this.initChart()
+            this.screenAdapter()
+            this.updateChart()
+        }
+    },
     computed:{
+         ...mapState(['theme']),
        catName() {
            if(!this.allData){
                return ''
@@ -27,7 +38,8 @@ export default{
        },
        catStyle() {
            return {
-               fontSize:this.titleSize+'px'
+               fontSize:this.titleSize*1.5+'px',
+               color:getThemeValue(this.theme).titleColor
                }
        }
     },
@@ -52,7 +64,7 @@ export default{
     },
     methods:{
       initChart() {
-          this.chartInstance = this.$echarts.init(this.$refs.hot_ref,'chalk')
+          this.chartInstance = this.$echarts.init(this.$refs.hot_ref,this.theme)
           const initOption={
               title:{
                 text:'▎热销商品销量占比',
@@ -60,7 +72,7 @@ export default{
                 top:20 
               },
               legend:{
-                top:'10%',
+                top:'20%',
                 icon:'circle'
               },
               series:[
@@ -130,26 +142,25 @@ export default{
       screenAdapter() {
           if(this.$refs.hot_ref){
              this.titleSize = this.$refs.hot_ref.offsetWidth / 100 * 3.6 //eslint-disable-line no-unused-vars 
-          }
-          
+          }  
           const adapterOption = {
               title:{
                   textStyle:{
-                      fontSize:this.titleSize
+                      fontSize:this.titleSize*1.1
                   }
               },
               legend:{
-                  itemWidth:this.titleSize/2,
-                  itemHeight:this.titleSize/2,
+                  itemWidth:this.titleSize*1.2,
+                  itemHeight:this.titleSize*1.2,
                   itemGap:this.titleSize/2,
                   textStyle:{
-                      fontSize:this.titleSize/2
+                      fontSize:this.titleSize/1.5
                   }
               },
               series:[
                   {
-                      radius:this.titleSize*4.5,
-                      center:['50%','50%']
+                      radius:this.titleSize*5,
+                      center:['50%','60%']
                   }
               ]
           }
